@@ -9,22 +9,22 @@ const util = require('util');
 //     password:'6mfqhhEjsZ',
 //     database:'0m4tX28OBZ'
 // });
-// const pool = mysql.createPool({
-//     connectionLimit: 50,
-//     host: 'localhost',
-//     port: 3306,
-//     user: 'root',
-//     password: '',
-//     database: 'midtermweb'
-// });
 const pool = mysql.createPool({
     connectionLimit: 50,
-    host: 'remotemysql.com',
+    host: 'localhost',
     port: 3306,
-    user: 'ZhwOpLCVpY',
-    password: 'Qrd4tTTJB8',
-    database: 'ZhwOpLCVpY'
+    user: 'root',
+    password: '',
+    database: 'midtermweb'
 });
+// const pool = mysql.createPool({
+//     connectionLimit: 50,
+//     host: 'remotemysql.com',
+//     port: 3306,
+//     user: 'ZhwOpLCVpY',
+//     password: 'Qrd4tTTJB8',
+//     database: 'ZhwOpLCVpY'
+// });
 
 const mysql_query = util.promisify(pool.query).bind(pool);
 module.exports = {
