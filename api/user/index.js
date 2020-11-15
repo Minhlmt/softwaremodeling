@@ -8,7 +8,7 @@ const passport = require('../../services/passport');
 const { response } = require('express');
 const { del } = require('../../utils/db');
  
-const client=new OAuth2Client("997832821745-tbin94gpcgvhkk9ek2fvkhg009e4f26p.apps.googleusercontent.com");
+const client=new OAuth2Client("858381752371-ifk7u4peaeorrp3s45pagkt5psdsdhp1.apps.googleusercontent.com");
 const router = express.Router();
 
 router.post('/login', passport.authenticate('local', { session: false }), async(req, res, next) => {
@@ -41,11 +41,11 @@ const user=res_add[0];
   res.json({user, token});
 });
 router.post("/googlelogin",async(req, res, next)=>{
-  // console.log(req.body);
+   console.log(req.body);
   const {tokenId}=req.body;
    const ticket = await client.verifyIdToken({
       idToken: tokenId,
-      audience: "997832821745-tbin94gpcgvhkk9ek2fvkhg009e4f26p.apps.googleusercontent.com",  // Specify the CLIENT_ID of the app that accesses the backend
+      audience: "858381752371-ifk7u4peaeorrp3s45pagkt5psdsdhp1.apps.googleusercontent.com",  // Specify the CLIENT_ID of the app that accesses the backend
       // Or, if multiple clients access the backend:
       //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
   }).then(async response=>{
