@@ -1,6 +1,6 @@
 const db=require('../utils/db');
 module.exports={
-    loadUserbyUsername:user => db.load(`select * from user where User='${user}'`),
+    loadUserbyUsername:user => db.load(`select * from user where Username='${user}'`),
     loadUserbyID:id => db.load(`select * from user where ID=${id}`),
     adduser: entity => db.add('user', entity),
     patch: entity => {

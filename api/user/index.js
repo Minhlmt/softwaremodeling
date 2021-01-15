@@ -26,12 +26,12 @@ router.post('/login', passport.authenticate('local', { session: false }), async(
 router.post('/signup', async(req, res, next) => {
  console.log(req.body);
  const N = 5;
-  const hash = bcrypt.hashSync(req.body.Pass, N);
+  const hash = bcrypt.hashSync(req.body.Password, N);
  const entity = req.body;
- entity.Pass=hash;
+ entity.Password=hash;
  console.log(entity);
  const result=await userModel.adduser(entity);
- const res_add=await userModel.loadUserbyUsername(req.body.User);
+ const res_add=await userModel.loadUserbyUsername(req.body.Username);
 console.log(res_add);
 const user=res_add[0];
   const token = jwt.sign(JSON.stringify(user), process.env.JWT_SECRET
@@ -40,83 +40,6 @@ const user=res_add[0];
   console.log(token);
   res.json({user, token});
 });
-router.post("/googlelogin",async(req, res, next)=>{
-   console.log(req.body);
-  const {tokenId}=req.body;
-   const ticket = await client.verifyIdToken({
-      idToken: tokenId,
-      audience: "858381752371-ifk7u4peaeorrp3s45pagkt5psdsdhp1.apps.googleusercontent.com",  // Specify the CLIENT_ID of the app that accesses the backend
-      // Or, if multiple clients access the backend:
-      //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-  }).then(async response=>{
-    const {email_verified,name,sub}=response.payload;
-    if(email_verified){
-      const userbyusername=await userModel.loadUserbyUsername(sub);
-      console.log("ok");
-      console.log(userbyusername[0]);
-      if(userbyusername[0]===undefined){
-        const entity=req.body;
-        entity.Name=name;
-        entity.Pass=1
-        entity.User=sub;
-        delete entity.tokenId;
-        await userModel.adduser(entity);
-        const res_add=await userModel.loadUserbyUsername(sub);
-        const user=res_add[0];
-          const token = jwt.sign(JSON.stringify(user), process.env.JWT_SECRET
-            // ,{expiresIn:process.env.tokenLife | 0} //set time token 's live
-            );
-          console.log(token);
-          res.json({user, token});
-      }
-      else{
-        const user=userbyusername[0];
-            const token = jwt.sign(JSON.stringify(user), process.env.JWT_SECRET
-              // ,{expiresIn:process.env.tokenLife | 0} //set time token 's live
-              );
-            console.log(token);
-            res.json({user, token});
-      }
-    }
-    // console.log(response.payload) ;
-  });
-  
-});
-router.post("/facebooklogin",async(req, res, next)=>{
-  const {accessToken,userID}=req.body;
-  let urlGraphFaceboook=`https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`
-  fetch(urlGraphFaceboook,{
-    method:"GET"
-  })
-  .then(res=>res.json())
-  .then( async response=>{
-    const userbyusername=await userModel.loadUserbyUsername(response.id);
-    if(userbyusername[0]===undefined){
-      const entity=req.body;
-      entity.Name=response.name;
-      entity.Pass=1
-      entity.User=response.id;
-      delete entity.accessToken;
-      delete entity.userID;
-      await userModel.adduser(entity);
-      const res_add=await userModel.loadUserbyUsername(response.id);
-      const user=res_add[0];
-        const token = jwt.sign(JSON.stringify(user), process.env.JWT_SECRET
-          // ,{expiresIn:process.env.tokenLife | 0} //set time token 's live
-          );
-        console.log(token);
-        res.json({user, token});
-    }
-    else{
-      const user=userbyusername[0];
-          const token = jwt.sign(JSON.stringify(user), process.env.JWT_SECRET
-            // ,{expiresIn:process.env.tokenLife | 0} //set time token 's live
-            );
-          console.log(token);
-          res.json({user, token});
-    }
-  })
-  
-});
+
 
 module.exports = router;
